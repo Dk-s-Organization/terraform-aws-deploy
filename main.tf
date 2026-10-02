@@ -34,7 +34,7 @@ resource "aws_iam_role_policy" "remediation_policy" {
 # 2. LOCAL BUNDLED REMEDIATION TEMPLATE
 # ------------------------------------------------------------------------------
 locals {
-  conformance_pack_template = <<YAML
+  # Adding quotes around "YAML" stops Terraform from breaking the CloudFormation syntax conformance_pack_template = <<"YAML"
 Resources:
   S3BucketLoggingEnabledRule:
     Type: AWS::Config::ConfigRule
@@ -59,13 +59,15 @@ Resources:
         AutomationAssumeRole:
           StaticValue:
             Values:
-              - "${aws_iam_role.remediation_role.arn}"
+              # Replaced with native CloudFormation Sub to get the account ID dynamically
+              - !Sub "arn:aws:iam::$${AWS::AccountId}:role/AWSConfigRemediationRoleForS3"
         BucketName:
           ResourceValue:
             Value: RESOURCE_ID
         TargetBucket:
           StaticValue:
             Values:
+              # Kept your prefix variable strategy using standard CloudFormation syntax
               - !Sub "${var.log_bucket_prefix}-$${AWS::Region}"
         TargetPrefix:
           StaticValue:
@@ -73,6 +75,7 @@ Resources:
               - "s3-access-logs/"
 YAML
 }
+
 
 # ------------------------------------------------------------------------------
 # 3. 5-REGION CONCURRENT FAN-OUT
