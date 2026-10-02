@@ -6,5 +6,6 @@ variable "aws_region" {
 
 variable "log_bucket_prefix" {
   type        = string
+  default     = "central-s3-logs"
   description = "The prefix naming convention of your pre-existing central log buckets (e.g., 'central-s3-logs' will target 'central-s3-logs-us-east-1')."
 }
