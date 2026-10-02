@@ -1,1 +1,1 @@
-# terraform will deploy to AWS via push changes to the existing code.
+# terraform will deploy to AWS via push commits to the existing code.
